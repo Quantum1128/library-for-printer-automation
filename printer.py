@@ -2,6 +2,7 @@ import serial
 import time
 from datetime import datetime
 
+#Sends the command encoded in UTF-8 and listens for replies until receiving the 'ok' from the printer, signaling that it is time for the next command
 def command(ser, command):
   start_time = datetime.now() 
   ser.write(str.encode(command)) 
@@ -10,11 +11,13 @@ def command(ser, command):
     print(line)
     if line == b'ok\n':
       break  
-
+      
+#defines the port through which serial connection will occur
 def defineP(pN, bR): 
   g = serial.Serial(pN, int(bR))  
   return g 
 
+#converts each individual command of G-code into a more sendable format
 def convert(fileIn, fileOut): 
   final = ';converted' 
   with open(fileIn, 'r') as g:  
@@ -37,6 +40,7 @@ def convert(fileIn, fileOut):
       print('Done!') 
   return fileOut  
 
+#opens the selected G-code file and sends it through the port inputted as the parameter
 def  sendFile(ser, file): 
    with open(file, 'r') as d: 
     content = d.read().splitlines()
